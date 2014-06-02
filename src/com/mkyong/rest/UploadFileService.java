@@ -45,12 +45,12 @@ public class UploadFileService {
             Configuration configuration = new Configuration();
 
             // Load model from the jar
-            configuration.setAcousticModelPath("resource:/models/acoustic/wsj_8kHz");
-
+            configuration.setAcousticModelPath("resource:/WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz");
+            
             // You can also load model from folder
             // configuration.setAcousticModelPath("file:en-us");
-
-            configuration.setDictionaryPath("resource:/models/acoustic/wsj_8kHz/dict/cmudict.0.6d");
+            
+            configuration.setDictionaryPath("resource:/WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz/dict/cmudict.0.6d");
 
             configuration.setLanguageModelPath("resource:/models/language/en-us.lm.dmp");
             System.out.println("Loaded models !");
@@ -61,31 +61,36 @@ public class UploadFileService {
             recognizer.startRecognition(uploadedInputStream);
             
             System.out.println("Start recording ...");
-            SpeechResult result = recognizer.getResult();
-            String response = null;
-            
-            if(result != null) {
-            	response = result.getHypothesis();
-            }
+            SpeechResult result;
+            String response = "";
+            int i = 1;
 
-//            while ((result = recognizer.getResult()) != null) {
-//
-//                System.out.format("Hypothesis: %s\n",
-//                        result.getHypothesis());
-//                response = result.getHypothesis();
-//
-//                System.out.println("List of recognized words and their times:");
-//                for (WordResult r : result.getWords()) {
-//                    System.out.println(r);
-//                }
-//
-//                System.out.println("Best 3 hypothesis:");
-//                for (String s : result.getNbest(3)) {
-//                    System.out.println(s);
-//                }
-//
-//                System.out.println("Lattice contains " + result.getLattice().getNodes().size() + " nodes");
-//            }
+            while ((result = recognizer.getResult()) != null) {
+
+                System.out.format("Hypothesis: %s\n",
+                        result.getHypothesis());
+                
+                response += response == "" ? "" : "\n\n";
+                response += "Statement " + String.valueOf(i) + ": \n";
+                response += "\tResult: " + result.getHypothesis() + "\n";
+
+                System.out.println("List of recognized words and their times:");
+                for (WordResult r : result.getWords()) {
+                    System.out.println(r);
+                }
+
+                System.out.println("Best 3 hypothesis:");
+                response += "\t Best 3 results: \n";
+                for (String s : result.getNbest(3)) {
+                    System.out.println(s);
+                    response += "\t\t" + s.replace("<s>", "").replace("</s>", "").trim() + "\n";
+                }
+
+                System.out.println("Lattice contains " + result.getLattice().getNodes().size() + " nodes");
+                i++;
+            }
+            
+            response = "<pre>" + response + "</pre>";
 
             recognizer.stopRecognition();
             return response;

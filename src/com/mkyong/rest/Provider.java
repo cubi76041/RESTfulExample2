@@ -23,14 +23,12 @@ public class Provider {
 			Configuration configuration = new Configuration();
 
 			// Load model from the jar
-			configuration
-					.setAcousticModelPath("resource:/models/acoustic/wsj_8kHz");
-
-			// You can also load model from folder
-			// configuration.setAcousticModelPath("file:en-us");
-
-			configuration
-					.setDictionaryPath("resource:/models/acoustic/wsj_8kHz/dict/cmudict.0.6d");
+			configuration.setAcousticModelPath("resource:/WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz");
+	        
+	        // You can also load model from folder
+	        // configuration.setAcousticModelPath("file:en-us");
+	        
+	        configuration.setDictionaryPath("resource:/WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz/dict/cmudict.0.6d");
 
 			configuration
 					.setLanguageModelPath("resource:/models/language/en-us.lm.dmp");
